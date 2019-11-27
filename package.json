@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
+  },
+  "dependencies": {
+    "cypress": "^3.6.1",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "http-proxy": "^1.18.0",
+    "morgan": "^1.9.1"
+  }
+}
