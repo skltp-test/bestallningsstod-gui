@@ -14,9 +14,11 @@ pipeline {
         // on local Jenkins machine (assuming port 8080) see
         // http://localhost:8080/pipeline-syntax/globals#env
         echo "Running build ${env.BUILD_ID} on ${env.JENKINS_URL}"
-        sh 'npm install --cache /tmp/empty-cache'
+        sh 'npm config set cache /tmp/npm-cache --global'
+		sh 'npm config list'
+		//sh 'npm install --cache /tmp/empty-cache'
 		//sh 'npm install'
-		//sh 'npm ci'
+		sh 'npm ci'
         sh 'npm run cy:verify'
       }
     }
