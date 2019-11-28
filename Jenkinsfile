@@ -89,12 +89,4 @@ pipeline {
       }
     }
   }
-
-  post {
-    always {
-      //archiveArtifacts artifacts: 'test/cypress/videos/**/*.*', fingerprint: false
-      // TODO: Använd variabler för att hämta JUnit-filer istället för hårdkodade pather
-      //junit 'test/cypress/results/*.xml'
-    }
-  }
 }
