@@ -55,11 +55,11 @@ pipeline {
 	stage('Kopiera cert och lösenord till container') {
 		steps {
 			echo "Kopiera cert och lösenord"
-			dir("proxy") withCredentials([certificate(credentialsId: 'TSTNMT2321000156-B02', keystoreVariable: 'CERTKEY', passwordVariable: 'CERTKEYPWD')]) {
+			withCredentials([certificate(credentialsId: 'TSTNMT2321000156-B02', keystoreVariable: 'CERTKEY', passwordVariable: 'CERTKEYPWD')]) {
 			sh """
 				#! /bin/bash
-				cat ${CERTKEY} > ./pki/cert.p12
-				cat ${CERTKEYPWD} > ./pki/pass.txt
+				cat ${CERTKEY} > ./proxy/pki/cert.p12
+				cat ${CERTKEYPWD} > ./proxy/pki/pass.txt
 				sh 'ls -lat'
 			"""
 			}
