@@ -57,6 +57,14 @@ pipeline {
 			echo "Kopierar cert och lösenord"
 		}
 	}
+	stage('Installera proxyserver dependencies') {
+	  steps {
+		echo "Startar proxyserver"
+		dir("proxy") {
+			sh 'npm install'
+		}
+	  }
+	}
 	stage('Starta proxyserver') {
       steps {
         echo "Startar proxyserver"
