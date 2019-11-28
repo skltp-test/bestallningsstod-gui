@@ -90,4 +90,15 @@ pipeline {
       }
     }
   }
+  post {
+    always {
+      archiveArtifacts artifacts: 'cypress/videos/**/*.*', fingerprint: false
+      // TODO: Använd variabler för att hämta JUnit-filer istället för hårdkodade pather
+      junit 'cypress/results/*.xml'
+  }
+  failure {
+      archiveArtifacts artifacts: 'cypress/screenshots/**/*.*', fingerprint: false
+      archiveArtifacts artifacts: '.npm/_logs/*.log', fingerprint: false
+      archiveArtifacts artifacts: "${CYPRESSFAILEDLOGS_REL}", fingerprint: false
+  }
 }
