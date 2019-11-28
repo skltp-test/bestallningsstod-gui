@@ -107,6 +107,7 @@ pipeline {
       junit 'cypress/results/*.xml'
 	  echo 'Stopping local proxy server'
       sh "kill \$(ps aux | grep 'nohub' | awk '{print \$2}')"
+	  }
   }
   failure {
       archiveArtifacts artifacts: 'cypress/screenshots/**/*.*', fingerprint: false
