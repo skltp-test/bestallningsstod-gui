@@ -12,7 +12,7 @@ pipeline {
 
     HOME = "${env.WORKSPACE}" // Måste sättas för "npm ci"
 
-    CYPRESS_DIR_REL="test/cypress"
+    CYPRESS_DIR_REL=""
     RESULTAT_DIR_REL="${CYPRESS_DIR_REL}/results"
     RESULTAT_DIR_ABS="${env.WORKSPACE}/${RESULTAT_DIR_REL}"
 
@@ -26,8 +26,8 @@ pipeline {
 
 	//CA 
 	//TODO
-	CERT=credentials('')
-	CERT_PASS=credentials('SITHS_CERT_PASS')
+	//CERT=credentials('')
+	//CERT_PASS=credentials('SITHS_CERT_PASS')
 	
 	
     // Nycklarna till dashboard hanteras här: https://dashboard.cypress.io/#/projects/1diiry/settings
@@ -46,6 +46,7 @@ pipeline {
 
     stage('Verifiera förkrav') {
       steps {
+		sh 'ls'
         echo "Running build ${env.BUILD_ID} on ${env.JENKINS_URL}"
         dir("${CYPRESS_DIR_REL}") {
           sh 'npm --version'
