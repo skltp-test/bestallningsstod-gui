@@ -60,7 +60,7 @@ pipeline {
 				#! /bin/bash
 				cat ${CERTKEY} > ./proxy/pki/cert.p12
 				cat ${CERTKEYPWD} > ./proxy/pki/pass.txt
-				sh 'ls -lat'
+				sh 'ls -lat /proxy/pki/'
 			"""
 			}
 		}
