@@ -43,10 +43,8 @@ pipeline {
   }
 
   stages {
-
     stage('Verifiera förkrav') {
       steps {
-		sh 'ls'
         echo "Running build ${env.BUILD_ID} on ${env.JENKINS_URL}"
         dir("${CYPRESS_DIR_REL}") {
           sh 'npm --version'
@@ -54,7 +52,19 @@ pipeline {
         }
       }
     }
-
+	stage('Starta proxyserver') {
+		steps {
+		
+		}
+	}
+	stage('Starta proxyserver') {
+      steps {
+        echo "Running build ${env.BUILD_ID} on ${env.JENKINS_URL}"
+        dir("proxy") {
+          sh 'nohub node app.js'
+        }
+      }
+    }
     stage('Rensa gamla filer') {
       steps {
         // Testrapporter
@@ -95,6 +105,8 @@ pipeline {
       archiveArtifacts artifacts: 'cypress/videos/**/*.*', fingerprint: false
       // TODO: Använd variabler för att hämta JUnit-filer istället för hårdkodade pather
       junit 'cypress/results/*.xml'
+	  echo 'Stopping local proxy server'
+      sh "kill \$(ps aux | grep 'nohub' | awk '{print \$2}')"
   }
   failure {
       archiveArtifacts artifacts: 'cypress/screenshots/**/*.*', fingerprint: false
