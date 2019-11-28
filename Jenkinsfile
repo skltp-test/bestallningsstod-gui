@@ -52,14 +52,14 @@ pipeline {
         }
       }
     }
-	stage('Starta proxyserver') {
+	stage('Kopierar cert och lösenord till container') {
 		steps {
-		
+			echo "Kopierar cert och lösenord"
 		}
 	}
 	stage('Starta proxyserver') {
       steps {
-        echo "Running build ${env.BUILD_ID} on ${env.JENKINS_URL}"
+        echo "Startar proxyserver"
         dir("proxy") {
           sh 'nohub node app.js'
         }
