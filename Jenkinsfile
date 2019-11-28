@@ -92,35 +92,9 @@ pipeline {
 
   post {
     always {
-      archiveArtifacts artifacts: 'test/cypress/videos/**/*.*', fingerprint: false
+      //archiveArtifacts artifacts: 'test/cypress/videos/**/*.*', fingerprint: false
       // TODO: Använd variabler för att hämta JUnit-filer istället för hårdkodade pather
-      junit 'test/cypress/results/*.xml'
+      //junit 'test/cypress/results/*.xml'
     }
-
-    //fixed {
-      //TODO
-	  // Skicka epost om jobbet går bra igen
-      //emailext (
-      //  subject: "Fixat! Jobb '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-      //  body: "Jobb '${env.JOB_NAME} [${env.BUILD_NUMBER}]' går nu BRA igen. Se konsollutmatning här: '${env.BUILD_URL}'",
-      //  to: "${EPOSTMOTTAGARE}"
-      //)
-    //}
-
-    //failure {
-    //  archiveArtifacts artifacts: 'test/cypress/screenshots/**/*.*', fingerprint: false
-    //  archiveArtifacts artifacts: '.npm/_logs/*.log', fingerprint: false
-    //  archiveArtifacts artifacts: "${CYPRESSFAILEDLOGS_REL}", fingerprint: false
-    //}
-
-    // Denna sektion exekveras enbart om föregående körning gick bra och denna misslyckades
-    //regression {
-      // Skicka epost om jobbet misslyckas
-    //  emailext (
-    //    subject: "Misslyckat! Jobb '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-    //    body: "Jobb '${env.JOB_NAME} [${env.BUILD_NUMBER}]' MISSLYCKADES! Se konsollutmatning här: '${env.BUILD_URL}'. Inga fler mail kommer skickas innan jobbet åter går bra.",
-    //    to: "${EPOSTMOTTAGARE}"
-    //  )
-    //}
   }
 }
