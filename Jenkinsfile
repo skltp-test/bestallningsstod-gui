@@ -12,7 +12,7 @@ pipeline {
 
     HOME = "${env.WORKSPACE}" // Måste sättas för "npm ci"
 
-    CYPRESS_DIR_REL=""
+    CYPRESS_DIR_REL="cypress"
     RESULTAT_DIR_REL="${CYPRESS_DIR_REL}/results"
     RESULTAT_DIR_ABS="${env.WORKSPACE}/${RESULTAT_DIR_REL}"
 
