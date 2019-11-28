@@ -61,7 +61,7 @@ pipeline {
       steps {
         echo "Startar proxyserver"
         dir("proxy") {
-          sh 'nohub node app.js'
+          sh 'node app.js'
         }
       }
     }
@@ -106,7 +106,7 @@ pipeline {
       // TODO: Använd variabler för att hämta JUnit-filer istället för hårdkodade pather
       junit 'cypress/results/*.xml'
 	  echo 'Stopping local proxy server'
-      sh "kill \$(ps aux | grep 'nohub' | awk '{print \$2}')"
+      sh "kill \$(ps aux | grep 'node' | awk '{print \$2}')"
 	  }
   failure {
       archiveArtifacts artifacts: 'cypress/screenshots/**/*.*', fingerprint: false
