@@ -52,14 +52,22 @@ pipeline {
         }
       }
     }
-	stage('Kopierar cert och lösenord till container') {
+	stage('Kopiera cert och lösenord till container') {
 		steps {
-			echo "Kopierar cert och lösenord"
+			echo "Kopiera cert och lösenord"
+			dir("proxy") withCredentials([certificate(credentialsId: 'TSTNMT2321000156-B02', keystoreVariable: 'CERTKEY', passwordVariable: 'CERTKEYPWD')]) {
+			sh """
+				#! /bin/bash
+				cat ${CERTKEY} > ./pki/cert.p12
+				cat ${CERTKEYPWD} > ./pki/pass.p12
+				sh 'ls -lat'
+			"""
+			}
 		}
 	}
 	stage('Installera proxyserver dependencies') {
 	  steps {
-		echo "Startar proxyserver"
+	    echo "Startar proxyserver"
 		dir("proxy") {
 			sh 'npm install'
 		}
