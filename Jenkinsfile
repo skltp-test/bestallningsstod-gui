@@ -16,13 +16,6 @@ pipeline {
     RESULTAT_DIR_REL="${CYPRESS_DIR_REL}/results"
     RESULTAT_DIR_ABS="${env.WORKSPACE}/${RESULTAT_DIR_REL}"
 
-    RESURSRAPPORTSKRIPTNAMN = "write_resource_stats.sh"
-    RESURSSKRIPT_ABS="${env.WORKSPACE}/${CYPRESS_DIR_REL}/${RESURSRAPPORTSKRIPTNAMN}"
-
-    RESURSRAPPORTERINGSFIL_REL="${RESULTAT_DIR_REL}/resursrapporteringsfil.txt"
-    RESURSRAPPORTERINGSFIL_ABS="${env.WORKSPACE}/${RESURSRAPPORTERINGSFIL_REL}"
-    RESURSINTERVALL=30
-
     // TODO: cypress-failed-log skriver i dagsläget till <startdir>/cypress/logs oavsett hur
     // man konfigurerar Cypress. Endera låter vi det vara så (katalogen skapas endast när testfall
     // går fel), eller så tas cypress-failed-log-pluginet bort. Det tredje alternativet är att se
@@ -69,8 +62,6 @@ pipeline {
         // Loggfiler från tidigare körningar
         sh "rm -fr '${env.WORKSPACE}/.npm/_logs/*.log'"
 
-        // Resursrapporteringfil
-        sh "rm -fr '${RESURSRAPPORTERINGSFIL_ABS}'"
       }
     }
 
@@ -102,7 +93,6 @@ pipeline {
   post {
     always {
       archiveArtifacts artifacts: 'test/cypress/videos/**/*.*', fingerprint: false
-      archiveArtifacts artifacts: "${RESURSRAPPORTERINGSFIL_REL}", fingerprint: false
       // TODO: Använd variabler för att hämta JUnit-filer istället för hårdkodade pather
       junit 'test/cypress/results/*.xml'
     }
@@ -117,11 +107,11 @@ pipeline {
       //)
     //}
 
-    failure {
-      archiveArtifacts artifacts: 'test/cypress/screenshots/**/*.*', fingerprint: false
-      archiveArtifacts artifacts: '.npm/_logs/*.log', fingerprint: false
-      archiveArtifacts artifacts: "${CYPRESSFAILEDLOGS_REL}", fingerprint: false
-    }
+    //failure {
+    //  archiveArtifacts artifacts: 'test/cypress/screenshots/**/*.*', fingerprint: false
+    //  archiveArtifacts artifacts: '.npm/_logs/*.log', fingerprint: false
+    //  archiveArtifacts artifacts: "${CYPRESSFAILEDLOGS_REL}", fingerprint: false
+    //}
 
     // Denna sektion exekveras enbart om föregående körning gick bra och denna misslyckades
     //regression {
