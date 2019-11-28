@@ -59,7 +59,7 @@ pipeline {
 			sh """
 				#! /bin/bash
 				cat ${CERTKEY} > ./pki/cert.p12
-				cat ${CERTKEYPWD} > ./pki/pass.p12
+				cat ${CERTKEYPWD} > ./pki/pass.txt
 				sh 'ls -lat'
 			"""
 			}

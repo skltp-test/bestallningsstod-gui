@@ -4,7 +4,7 @@ const fs = require('fs');
 const http = require('http');
 const morgan = require('morgan')('dev');
 
-proxyBuilder('Valid cert', 'client-valid.p12', 'client-valid-pass.txt', 25000);
+proxyBuilder('Valid cert', 'cert.p12', 'pass.txt', 25000);
 //proxyBuilder('Invalid cert password', 'client-valid.p12', 'bad-password', 25001);
 //proxyBuilder('Untrusted cert', 'client-untrusted.p12', 'test', 25002);
 //proxyBuilder('Revoked cert', 'client-revoked.p12', 'test', 25003);
