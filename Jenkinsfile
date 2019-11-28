@@ -108,10 +108,10 @@ pipeline {
 	  echo 'Stopping local proxy server'
       sh "kill \$(ps aux | grep 'nohub' | awk '{print \$2}')"
 	  }
-  }
   failure {
       archiveArtifacts artifacts: 'cypress/screenshots/**/*.*', fingerprint: false
       archiveArtifacts artifacts: '.npm/_logs/*.log', fingerprint: false
       archiveArtifacts artifacts: "${CYPRESSFAILEDLOGS_REL}", fingerprint: false
+	  }
   }
 }
