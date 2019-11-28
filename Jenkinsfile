@@ -58,12 +58,8 @@ pipeline {
 			withCredentials([certificate(credentialsId: 'TSTNMT2321000156-B02', keystoreVariable: 'CERTKEY', passwordVariable: 'CERTKEYPWD')]) {
 			sh """
 				#! /bin/bash
-				ls -lat ./proxy/pki/
-				echo "sanity-test" > ./proxy/pki/test.txt
-				cat ./proxy/pki/test.txt
 				cat ${CERTKEY} > ./proxy/pki/cert.p12
-				ls -lat ./proxy/pki/
-				cat ${CERTKEYPWD} > ./proxy/pki/pass.txt
+				echo ${CERTKEYPWD} > ./proxy/pki/pass.txt
 				ls -lat ./proxy/pki/
 			"""
 			}
