@@ -1,7 +1,8 @@
 {
   "scripts": {
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+	"cy:verify": "cypress verify"
   },
   "dependencies": {
     "cypress": "^3.6.1",
