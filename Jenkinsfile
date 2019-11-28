@@ -67,9 +67,10 @@ pipeline {
 	}
 	stage('Installera proxyserver dependencies') {
 	  steps {
-	    echo "Startar proxyserver"
+	    echo "Installerar proxyserver dependencies"
 		dir("proxy") {
 			sh 'npm install'
+			sh 'npm install forever'	
 		}
 	  }
 	}
@@ -77,7 +78,7 @@ pipeline {
       steps {
         echo "Startar proxyserver"
         dir("proxy") {
-          sh 'node app.js'
+          sh 'forever start app.js'
         }
       }
     }
@@ -122,7 +123,7 @@ pipeline {
       // TODO: Använd variabler för att hämta JUnit-filer istället för hårdkodade pather
       junit 'cypress/results/*.xml'
 	  echo 'Stopping local proxy server'
-      sh "kill \$(ps aux | grep 'node' | awk '{print \$2}')"
+      sh "kill \$(ps aux | grep 'forever' | awk '{print \$2}')"
 	  }
   failure {
       archiveArtifacts artifacts: 'cypress/screenshots/**/*.*', fingerprint: false
