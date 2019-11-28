@@ -70,7 +70,7 @@ pipeline {
 	    echo "Installerar proxyserver dependencies"
 		dir("proxy") {
 			sh 'npm install'
-			sh 'npm install forever'	
+			sh 'npm install forever -g'
 		}
 	  }
 	}
