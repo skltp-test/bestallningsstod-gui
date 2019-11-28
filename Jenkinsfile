@@ -65,7 +65,7 @@ pipeline {
     // shutdown the server running in the background
     always {
       echo 'Stopping local proxy server'
-      sh "kill $(ps aux | grep 'nohub' | awk '{print $2}')"
+      sh "kill \$(ps aux | grep 'nohub' | awk '{print \$2}')"
     }
   }
 }
