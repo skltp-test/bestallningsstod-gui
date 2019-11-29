@@ -4,7 +4,7 @@ const fs = require('fs');
 const http = require('http');
 const morgan = require('morgan')('dev');
 
-proxyBuilder('Valid cert', 'cert.p12', 'pass.txt', 25000);
+proxyBuilder('Proxy-Server - Valid cert', 'cert.p12', 'pass.txt', 25000);
 //proxyBuilder('Invalid cert password', 'client-valid.p12', 'bad-password', 25001);
 //proxyBuilder('Untrusted cert', 'client-untrusted.p12', 'test', 25002);
 //proxyBuilder('Revoked cert', 'client-revoked.p12', 'test', 25003);
@@ -28,13 +28,13 @@ function proxyBuilder(testTitle, certPath, certPass, targetPort) {
 
     const proxyServer = http.createServer((req, res) => {
       console.log(testTitle);
-      morgan(req, res, () => null);
+      //morgan(req, res, () => null);
       proxy.web(req, res);
     });
 	
     proxyServer.on('upgrade', (req, socket, head) => {
       console.log(testTitle);
-      morgan(req, socket, () => null);
+      //morgan(req, socket, () => null);
       proxy.ws(req, socket, head);
     });
 
