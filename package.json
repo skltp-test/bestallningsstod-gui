@@ -3,7 +3,8 @@
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "cy:verify": "cypress verify",
-    "cy:proxy:run": "node proxy/app.js | cypress run --reporter mocha-junit-reporter"
+    "cy:proxy:run": "node proxy/app.js | cypress run --reporter mocha-junit-reporter",
+	"cy:proxy:open": "node proxy/app.js | cypress open"
   },
   "dependencies": {
     "cypress": "^3.7.0",

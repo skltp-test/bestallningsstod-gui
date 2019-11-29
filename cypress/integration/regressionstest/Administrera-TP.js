@@ -48,7 +48,10 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 		tjansteproducent: 'TSTNMT2321000156-B02',
 		tjanstekontrakt: 'CancelBooking',
 		logiskAdressat : {
-			ny: 'TEST123',
+			ny: {
+				hsaId : 'TEST123',
+				namn: 'Test 123'
+			},
 			existerande: 'TEST123'
 		},
 		url : 'http://testurl.nordicmedtest.se',
@@ -63,6 +66,7 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 			cy.visit(env.root + '/#/orderhistory')
 		})
 		it('Kan kontrollera löpnumret i beställningshistoriken', function() {
+			cy.wait(3000)
 			cy.get('tbody > :nth-child(1) > :nth-child(1)').then(($cell) => {
 			let orderIndex = parseInt($cell.text().trim(), 10)
 		    assert.isNotNull(orderIndex)
@@ -100,11 +104,16 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 			cy.wait(1000)
 			cy.get('strong').contains(testdata.tjanstekontrakt).click()
 		})	
-		it('Kan ange ny logisk adressat "' + testdata.logiskAdressat.ny + '"', function() {
+		it('Kan ange ny logisk adressat "' + testdata.logiskAdressat.ny.hsaId + '"', function() {
 			cy.get('#optionsRadios1').click()
 			
-			cy.get('#newLogicalAddress_HSAID').type(testdata.logiskAdressat.ny)
-			cy.get('#newLogicalAddress_Name').type('Namn: ' + testdata.logiskAdressat.ny)
+			cy.get('#newLogicalAddress_HSAID').type(testdata.logiskAdressat.ny.hsaId)
+			cy.get('#newLogicalAddress_Name').type('Namn: ' + testdata.logiskAdressat.ny.namn)
+			cy.get('[ng-click="addNewLogicalAddress(newLogicalAddress); newLogicalAddress = {};"]').click()
+			
+			cy.get('[ng-repeat="logiskAdress in getNewLogicalAddresses() | orderBy:' + "'namn'" + ' track by logiskAdress.hsaId"] > :nth-child(3)').should(($row) => {
+				expect($row).to.contain(testdata.logiskAdressat.ny.hsaId)
+			})
 			cy.wait(500)
 			
 		})		
@@ -154,6 +163,18 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 			//cy.get('button').contains('Se sammanfattning och beställ').should('be.visible')
 			//cy.get('button').contains('Se sammanfattning och beställ').click()
 		})
+		it('Användare kontrollerar beställningen', function() {
+			
+			cy.get('#newLogicalAddress_HSAID').should(($info) => {
+				expect($info).to.contain(testdata.logiskAdressat.ny.hsaId)
+			})
+			cy.get('#newLogicalAddress_Name').should(($info) => {
+				expect($info).to.contain(testdata.logiskAdressat.ny.namn)
+			})
+			cy.get('#ovrigInformation').should(($info) => {
+				expect($info).to.contain(testdata.ovrigInformation)
+			})
+		})
 		it('Kan skicka beställningen', function() {
 			cy.get('[ng-click="triggerSendOrder()"]').should('be.visible')
 			cy.get('[ng-click="triggerSendOrder()"]').click()
@@ -164,7 +185,6 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 	})
 	context('Användare bekräftelsemeddelande', function() {
 		it('Kan läsa att beställningen är mottagen', function() {
-			//cy.wait(500)
 			cy.get('[translate="order.confirmation.text"').should('be.visible')
 			cy.get('p').contains('Beställningen kommer nu skickas till tjänsteplattformens servicedesk').should('be.visible')
 		})
