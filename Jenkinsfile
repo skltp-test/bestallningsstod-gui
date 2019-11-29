@@ -85,7 +85,7 @@ pipeline {
       }
     }
 
-    stage('Installera Cypress') {
+    stage('Installera & exekvera Cypress') {
       steps {
         dir("${CYPRESS_DIR_REL}") {
           sh 'npm ci'
@@ -93,13 +93,7 @@ pipeline {
 
           // Skriv ut en lista med alla installerade Node-moduler
           sh 'npm list'
-        }
-      }
-    }
-
-    stage('Exekvera Cypresstester') {
-      steps {
-	    dir("${CYPRESS_DIR_REL}") {
+        
           // ToDo: SPECFILES_TO_RUN sätts som parameter i Jenkinsjobbet.
           // När troubleshootingen är klar gällande vart problemet med timeouts ligger
           // så ska nedanstående rad återställas:
