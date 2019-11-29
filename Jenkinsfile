@@ -98,6 +98,7 @@ pipeline {
 
     stage('Exekvera Cypresstester') {
       steps {
+	    dir("${CYPRESS_DIR_REL}") {
           // ToDo: SPECFILES_TO_RUN sätts som parameter i Jenkinsjobbet.
           // När troubleshootingen är klar gällande vart problemet med timeouts ligger
           // så ska nedanstående rad återställas:
@@ -106,6 +107,7 @@ pipeline {
 		  
 		  //Kör alla specs med PKI proxy
 		  sh "node proxy/app.js | cypress run --reporter mocha-junit-reporter"
+		}
       }
     }
   }
