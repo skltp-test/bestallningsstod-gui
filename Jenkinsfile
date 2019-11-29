@@ -62,6 +62,8 @@ pipeline {
 				cat ${CERTKEY} > ./proxy/pki/cert.p12
 				echo ${CERTKEYPWD} > ./proxy/pki/pass.txt
 				ls -lat ./proxy/pki/
+				file -i ./proxy/pki/cert.p12
+				file -i ./proxy/pki/pass.txt
 			"""
 			}
 		}
