@@ -59,9 +59,9 @@ pipeline {
 			withCredentials([certificate(credentialsId: 'TSTNMT2321000156-B4V', keystoreVariable: 'CERTKEY', passwordVariable: 'CERTKEYPWD')]) {
 			sh """
 				#! /bin/bash
-				cat ${CERTKEY} > ./cypress/proxy/pki/cert.p12
-				echo ${CERTKEYPWD} > ./cypress/proxy/pki/pass.txt
-				ls -lat ./cypress/proxy/pki/
+				cat ${CERTKEY} > ./proxy/pki/cert.p12
+				echo ${CERTKEYPWD} > ./proxy/pki/pass.txt
+				ls -lat ./proxy/pki/
 			"""
 			}
 		}
@@ -69,7 +69,7 @@ pipeline {
 	stage('Installera proxyserver dependencies') {
 	  steps {
 	    echo "Installerar proxyserver dependencies"
-		dir("cypress/proxy") {
+		dir("proxy") {
 			sh 'npm install'
 		}
 	  }
@@ -101,7 +101,7 @@ pipeline {
           //sh "npm run test:e2e:electron -- --spec '${SPECFILES_TO_RUN}'"
 		  
 		  //Kör alla specs med PKI proxy
-		  sh "node proxy/app.js | cypress run --reporter mocha-junit-reporter"
+		  sh "npm run cy:proxy:run"
 		}
       }
     }
