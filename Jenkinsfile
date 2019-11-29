@@ -49,18 +49,19 @@ pipeline {
         dir("${CYPRESS_DIR_REL}") {
           sh 'npm --version'
           sh 'node --version'
+		  sh 'ls -lat'
         }
       }
     }
 	stage('Kopiera cert och lösenord till container') {
 		steps {
 			echo "Kopiera cert och lösenord"
-			withCredentials([certificate(credentialsId: 'TSTNMT2321000156-B02', keystoreVariable: 'CERTKEY', passwordVariable: 'CERTKEYPWD')]) {
+			withCredentials([certificate(credentialsId: 'TSTNMT2321000156-B4V', keystoreVariable: 'CERTKEY', passwordVariable: 'CERTKEYPWD')]) {
 			sh """
 				#! /bin/bash
-				cat ${CERTKEY} > ./proxy/pki/cert.p12
-				echo ${CERTKEYPWD} > ./proxy/pki/pass.txt
-				ls -lat ./proxy/pki/
+				cat ${CERTKEY} > ./cypress/proxy/pki/cert.p12
+				echo ${CERTKEYPWD} > ./cypress/proxy/pki/pass.txt
+				ls -lat ./cypress/proxy/pki/
 			"""
 			}
 		}
@@ -68,7 +69,7 @@ pipeline {
 	stage('Installera proxyserver dependencies') {
 	  steps {
 	    echo "Installerar proxyserver dependencies"
-		dir("proxy") {
+		dir("cypress/proxy") {
 			sh 'npm install'
 		}
 	  }
@@ -116,8 +117,8 @@ pipeline {
       archiveArtifacts artifacts: 'cypress/videos/**/*.*', fingerprint: false
       // TODO: Använd variabler för att hämta JUnit-filer istället för hårdkodade pather
       junit 'cypress/results/*.xml'
-	  echo 'Stopping local proxy server'
-      sh "kill \$(ps aux | grep 'forever' | awk '{print \$2}')"
+	  //echo 'Stopping local proxy server'
+      //sh "kill \$(ps aux | grep 'node' | awk '{print \$2}')"
 	  }
   failure {
       archiveArtifacts artifacts: 'cypress/screenshots/**/*.*', fingerprint: false
