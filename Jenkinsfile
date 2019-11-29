@@ -70,18 +70,9 @@ pipeline {
 	    echo "Installerar proxyserver dependencies"
 		dir("proxy") {
 			sh 'npm install'
-			sh 'npm install forever -g'
 		}
 	  }
 	}
-	stage('Starta proxyserver') {
-      steps {
-        echo "Startar proxyserver"
-        dir("proxy") {
-          sh 'forever start app.js'
-        }
-      }
-    }
     stage('Rensa gamla filer') {
       steps {
         // Testrapporter
@@ -107,13 +98,14 @@ pipeline {
 
     stage('Exekvera Cypresstester') {
       steps {
-        dir("${CYPRESS_DIR_REL}") {
           // ToDo: SPECFILES_TO_RUN sätts som parameter i Jenkinsjobbet.
           // När troubleshootingen är klar gällande vart problemet med timeouts ligger
           // så ska nedanstående rad återställas:
           // sh "npm run test:e2e:electron"
-          sh "npm run test:e2e:electron -- --spec '${SPECFILES_TO_RUN}'"
-        }
+          //sh "npm run test:e2e:electron -- --spec '${SPECFILES_TO_RUN}'"
+		  
+		  //Kör alla specs med PKI proxy
+		  sh "node proxy/app.js | cypress run --reporter mocha-junit-reporter"
       }
     }
   }
