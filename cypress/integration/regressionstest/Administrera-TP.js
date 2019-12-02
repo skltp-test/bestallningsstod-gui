@@ -62,11 +62,12 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 	
     context('Användare i beställningstödet - Mina beställningar', function() {
 		it('Går till "Mina beställningar"', function() {
-			cy.wait(1000)
 			cy.visit(env.root + '/#/orderhistory')
 		})
 		it('Kan kontrollera löpnumret i beställningshistoriken', function() {
-			cy.wait(3000)
+			//cy.wait(3000)
+			//Vänta att tabellrader har populerats
+			cy.get('[ng-repeat="order in orderHistory | orderBy:[' + "'-created', '-id'" + ']"]').should('be.visible')
 			cy.get('tbody > :nth-child(1) > :nth-child(1)').then(($cell) => {
 			let orderIndex = parseInt($cell.text().trim(), 10)
 		    assert.isNotNull(orderIndex)
@@ -80,8 +81,9 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 	})
 	context('Användare i beställningstödet - Administrera tjänsteproducent', function() {
 		it('Går till "administrera tjänsteproducent".', function() {
-			cy.wait(1000)
 			cy.visit(env.root + '/#/order/producent')
+			//Vänta att sidan laddas
+			cy.get('[translate="order.producent.header.title"]').should('be.visible')
 		})
 		it('Kan välja miljön "' + testdata.miljo +'"', function() {
 			//assert.isNumber(miljo)
@@ -89,19 +91,25 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 			
 		})
 		it('Kan ange tjänsteproducent "' + testdata.tjansteproducent + '"', function() {
+			// Sök efter thänsteproducent
 			cy.get('.col-md-12 > .form-group > .form-control').should('be.visible')
 			cy.get('.col-md-12 > .form-group > .form-control').type(testdata.tjansteproducent)
 			cy.get('.col-md-12 > .form-group > .form-control').type('{enter}')
-			cy.get('[template-url="templates/typeahead-tjanstekomponent-extended.html"]').should('be.visible')
-			cy.wait(1000)
+			//Vänta på sökresultat
+			cy.get('[ng-bind-html="match.model.organisation | uibTypeaheadHighlight:query | trusted"]').should('be.visible')
+			//Spåra back-end requests
 			cy.server().route("GET",'/bs-api/api/anslutningar/**').as('getAnslutningar')
+			//Klicka på hittat alternativ
 			cy.get('a').contains(testdata.tjansteproducent).click()
+			//Vänta på back-end requests
 			cy.wait('@getAnslutningar')
 		})
 		it('Kan ange tjänstekontrakt som omfattas "' + testdata.tjanstekontrakt + '"', function() {
 			cy.get('domain-contract-search > .form-group > .form-control').should('be.visible')
 			cy.get('domain-contract-search > .form-group > .form-control').type(testdata.tjanstekontrakt)
-			cy.wait(1000)
+			//Vänta på sökresultatet
+			cy.get('[ng-if="match.model.tjanstekontraktNamn"]').should('be.visible')
+			//Välj tjänstekontrakt
 			cy.get('strong').contains(testdata.tjanstekontrakt).click()
 		})	
 		it('Kan ange ny logisk adressat "' + testdata.logiskAdressat.ny.hsaId + '"', function() {
@@ -114,31 +122,27 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 			cy.get('[ng-repeat="logiskAdress in getNewLogicalAddresses() | orderBy:' + "'namn'" + ' track by logiskAdress.hsaId"] > :nth-child(3)').should(($row) => {
 				expect($row).to.contain(testdata.logiskAdressat.ny.hsaId)
 			})
-			cy.wait(500)
-			
 		})		
 		//it('Kan ange befintlig logisk adressat ' + testdata.logiskAdressat.existerande + '', function() {
 		//})		
 		it('Kan ange URL "' + testdata.url + '" för "' + testdata.tjanstekontrakt + '"', function() {
 			cy.get('.ui-select-match > .btn-default').type(testdata.url)
 			cy.get('.ui-select-highlight').click()
-			cy.wait(500)
-			
 		})	
 		it('Kan ange övrig information', function() {
 			cy.get('#ovrigInformation').type(testdata.ovrigInformation)
-			cy.wait(100)
 		})	
 		//it('Kan ange beställarens kontaktinformation', function() {
 		//})	
 		it('Kan spara beställningen', function() {
 			cy.get(':nth-child(5) > .col-md-12 > [ng-click="save()"]').click()
+			cy.wait(10000)
 		})			
 		
 	})
 	context('Användare i beställningstödet - Mina beställningar', function() {
 		it('Går till "Mina beställningar"', function() {
-			cy.wait(1000)
+			//cy.wait(1000)
 			cy.visit(env.root + '/#/orderhistory')
 		})
 		it('Så ska löpnumret i beställningshistoriken ökat', function() {
@@ -157,19 +161,12 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 	})
 	context('Användare skickar in beställning', function() {
 		it('Kan gå in på beställningen', function() {
-			cy.wait(500)
 			cy.visit(env.root + '#/order/producent?orderId=' + testrun.orderHistory.orderIndex)
-			cy.wait(3000)
-			//cy.get('button').contains('Se sammanfattning och beställ').should('be.visible')
-			//cy.get('button').contains('Se sammanfattning och beställ').click()
 		})
 		it('Användare kontrollerar beställningen', function() {
 			
-			cy.get('#newLogicalAddress_HSAID').should(($info) => {
-				expect($info).to.contain(testdata.logiskAdressat.ny.hsaId)
-			})
-			cy.get('#newLogicalAddress_Name').should(($info) => {
-				expect($info).to.contain(testdata.logiskAdressat.ny.namn)
+			cy.get('[ng-repeat="logiskAdress in getNewLogicalAddresses() | orderBy:' + "'namn'" + ' track by logiskAdress.hsaId"] > :nth-child(3)').should(($row) => {
+				expect($row).to.contain(testdata.logiskAdressat.ny.hsaId)
 			})
 			cy.get('#ovrigInformation').should(($info) => {
 				expect($info).to.contain(testdata.ovrigInformation)
