@@ -2,6 +2,7 @@
   "scripts": {
     "cy:open": "cypress open",
     "cy:run": "cypress run",
+	"cy:run:junit" : "cypress run --reporter mocha-junit-reporter",
     "cy:verify": "cypress verify",
     "cy:proxy:run": "node proxy/app.js | cypress run --reporter mocha-junit-reporter",
 	"cy:proxy:open": "node proxy/app.js | cypress open"

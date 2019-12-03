@@ -61,11 +61,6 @@ pipeline {
 				#! /bin/bash
 				cp ${CERTKEY} ./proxy/pki/cert.p12
 				echo -n ${CERTKEYPWD} > ./proxy/pki/pass.txt
-				ls -lat ./proxy/pki/
-				file -i ./proxy/pki/cert.p12
-				file -i ./proxy/pki/pass.txt
-  			    openssl pkcs12 -nokeys -cacerts -info -in ./proxy/pki/cert.p12 -passin pass:${CERTKEYPWD}
-				openssl pkcs12 -nokeys -cacerts -info -in ./proxy/pki/cert.p12 -passin file:./proxy/pki/pass.txt
 			"""
 			}
 		}

@@ -168,6 +168,7 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 			cy.get('[ng-repeat="logiskAdress in getNewLogicalAddresses() | orderBy:' + "'namn'" + ' track by logiskAdress.hsaId"] > :nth-child(3)').should(($row) => {
 				expect($row).to.contain(testdata.logiskAdressat.ny.hsaId)
 			})
+			cy.wait(4000)
 			cy.get('#ovrigInformation').should(($info) => {
 				expect($info).to.contain(testdata.ovrigInformation)
 			})
