@@ -101,7 +101,7 @@ pipeline {
           //sh "npm run test:e2e:electron -- --spec '${SPECFILES_TO_RUN}'"
 		  
 		  //Kör alla specs
-		  sh "npm run cy:verify"
+		  sh "npm run cy:run:junit"
 		}
       }
     }
