@@ -73,6 +73,14 @@ pipeline {
 		}
 	  }
 	}
+	stage('Starta proxyserver') {
+        steps {
+	    echo "Installerar proxyserver dependencies"
+		dir("proxy") {
+			sh 'node app.js &'
+		}
+	  }
+    }
     stage('Rensa gamla filer') {
       steps {
         // Testrapporter
@@ -98,8 +106,8 @@ pipeline {
           // sh "npm run test:e2e:electron"
           //sh "npm run test:e2e:electron -- --spec '${SPECFILES_TO_RUN}'"
 		  
-		  //Kör alla specs med PKI proxy
-		  sh "npm run cy:proxy:run"
+		  //Kör alla specs
+		  sh "npm run cy:verify"
 		}
       }
     }
@@ -108,7 +116,7 @@ pipeline {
     always {
       archiveArtifacts artifacts: 'cypress/videos/**/*.*', fingerprint: false
       // TODO: Använd variabler för att hämta JUnit-filer istället för hårdkodade pather
-      junit 'cypress/results/*.xml'
+	  junit 'test-results.xml'
 	  //echo 'Stopping local proxy server'
       //sh "kill \$(ps aux | grep 'node' | awk '{print \$2}')"
 	  }

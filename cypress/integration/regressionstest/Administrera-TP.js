@@ -55,7 +55,7 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 			existerande: 'TEST123'
 		},
 		url : 'http://testurl.nordicmedtest.se',
-		ovrigInformation : 'En Teststräng åäöÅÄÖ',
+		ovrigInformation : 'En Teststrang',
 		kontaktinformation : ''
 	}
 	
@@ -63,9 +63,9 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
     context('Användare i beställningstödet - Mina beställningar', function() {
 		it('Går till "Mina beställningar"', function() {
 			cy.visit(env.root + '/#/orderhistory')
+			cy.get('[translate="order_history.title"]').should('be.visible')
 		})
 		it('Kan kontrollera löpnumret i beställningshistoriken', function() {
-			//cy.wait(3000)
 			//Vänta att tabellrader har populerats
 			cy.get('[ng-repeat="order in orderHistory | orderBy:[' + "'-created', '-id'" + ']"]').should('be.visible')
 			cy.get('tbody > :nth-child(1) > :nth-child(1)').then(($cell) => {
@@ -136,14 +136,15 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 		//})	
 		it('Kan spara beställningen', function() {
 			cy.get(':nth-child(5) > .col-md-12 > [ng-click="save()"]').click()
-			cy.wait(10000)
+			//Vänta på att mina beställningar sidan laddas
+			cy.get('[translate="order_history.title"]').should('be.visible')
 		})			
 		
 	})
 	context('Användare i beställningstödet - Mina beställningar', function() {
 		it('Går till "Mina beställningar"', function() {
-			//cy.wait(1000)
 			cy.visit(env.root + '/#/orderhistory')
+			cy.get('[translate="order_history.title"]').should('be.visible')
 		})
 		it('Så ska löpnumret i beställningshistoriken ökat', function() {
 			let orderIndex = this.orderIndex;
@@ -163,25 +164,20 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 		it('Kan gå in på beställningen', function() {
 			cy.visit(env.root + '#/order/producent?orderId=' + testrun.orderHistory.orderIndex)
 		})
-		it('Användare kontrollerar beställningen', function() {
+		it('Kan kontrollera logiskAdress', function() {
 			
 			cy.get('[ng-repeat="logiskAdress in getNewLogicalAddresses() | orderBy:' + "'namn'" + ' track by logiskAdress.hsaId"] > :nth-child(3)').should(($row) => {
 				expect($row).to.contain(testdata.logiskAdressat.ny.hsaId)
-			})
-			cy.wait(4000)
-			cy.get('#ovrigInformation').should(($info) => {
-				expect($info).to.contain(testdata.ovrigInformation)
 			})
 		})
 		it('Kan skicka beställningen', function() {
 			cy.get('[ng-click="triggerSendOrder()"]').should('be.visible')
 			cy.get('[ng-click="triggerSendOrder()"]').click()
-			cy.wait(500)
 			cy.get('[translate="order.main.review.send_btn"]').should('be.visible')
 			cy.get('button').contains('Skicka beställning').click()
 		})
 	})
-	context('Användare bekräftelsemeddelande', function() {
+	context('Användare läser bekräftelsemeddelande', function() {
 		it('Kan läsa att beställningen är mottagen', function() {
 			cy.get('[translate="order.confirmation.text"').should('be.visible')
 			cy.get('p').contains('Beställningen kommer nu skickas till tjänsteplattformens servicedesk').should('be.visible')
@@ -189,9 +185,8 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 	})
 	context('Användare i beställningstödet - Mina beställningar', function() {
 		it('Går till "Mina beställningar"', function() {
-			cy.wait(1000)
 			cy.visit(env.root + '/#/orderhistory')
-			cy.wait(500)
+			cy.get('[translate="order_history.title"]').should('be.visible')
 		})
 		it('Så ska beställningens status vara skickat', function() {
 			cy.get('tbody > :nth-child(1) > :nth-child(1)').should(($cell) => {
@@ -199,6 +194,20 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 			})
 			cy.get('tbody > :nth-child(1) > :nth-child(5)').should(($cell) => {
 				expect($cell).to.contain('Skickad')
+			})
+		})
+		it('Kan gå in på beställningen', function() {
+			cy.visit(env.root + '#/order/producent?orderId=' + testrun.orderHistory.orderIndex)
+		})
+		it('Kan kontrollera beställningen efter att den blivit skickad.', function() {
+			cy.get('[ng-if="nyaProducentanslutningar.length"]').should(($body) => {
+				expect($body).to.contain(testdata.tjanstekontrakt)
+				expect($body).to.contain(testdata.logiskAdressat.ny.hsaId)
+				expect($body).to.contain(testdata.logiskAdressat.ny.namn)
+				expect($body).to.contain(testdata.url)
+			})
+			cy.get('[ng-if="bestallning.otherInfo"]').should(($elm) => {
+				expect($elm).to.contain(testdata.ovrigInformation)
 			})
 		})
 	})
