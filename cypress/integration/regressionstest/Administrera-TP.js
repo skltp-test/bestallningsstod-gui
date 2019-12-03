@@ -55,7 +55,7 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 			existerande: 'TEST123'
 		},
 		url : 'http://testurl.nordicmedtest.se',
-		ovrigInformation : 'En Teststrang',
+		ovrigInformation : 'En Teststräng åäöÅÄÖ',
 		kontaktinformation : ''
 	}
 	
