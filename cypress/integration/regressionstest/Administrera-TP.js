@@ -7,7 +7,7 @@ let env = {
 
 
 /* Stödfunktioner 
-	TODO: Flytta till fixtures
+	TODO: Flytta testdata till fixtures
 */
 function replaceChars(s) {
 	s = s.replace(/[xy]/g, function(c) {
@@ -24,15 +24,12 @@ const generate = {
 		return replaceChars('xxxxxxxx')
 	},
 	"UTF8-TestString" : function() {
-		//TODO
-	  /*return 'xxxxxx'.replace(/[xy]/g, function(c) {
+		return 'xxxxxx'.replace(/[xy]/g, function(c) {
 		var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
 		return v.toString(16);
-	  });*/
-	},
-}
-const testdata = {
-	generate : generate	
+	  });
+	}
+	//TODO här kan man göra en funktion för längre test-strängar
 }
 
 
@@ -55,7 +52,7 @@ describe('TF 1.1.1 - Användare kan beställa ny producent anslutning', function
 			existerande: 'TEST123'
 		},
 		url : 'http://testurl.nordicmedtest.se',
-		ovrigInformation : 'En Teststräng åäöÅÄÖ',
+		ovrigInformation : 'En Teststräng åäöÅÄÖ' + generate['UTF8-TestString'](),
 		kontaktinformation : ''
 	}
 	
